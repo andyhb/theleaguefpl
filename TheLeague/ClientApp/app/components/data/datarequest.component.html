@@ -1,0 +1,3 @@
+﻿<div *ngIf="dataRequest && auth.isAdmin()">
+    <button class="btn btn-info glyphicon glyphicon-refresh" (click)="update()" [disabled]="!updateAllowed()"></button>
+</div>

@@ -1,0 +1,66 @@
+<div class='main-nav'>
+    <div class='navbar navbar-inverse'>
+        <div class='navbar-header'>
+            <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse'>
+                <span class='sr-only'>Toggle navigation</span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+                <span class='icon-bar'></span>
+            </button>
+            <a class='navbar-brand' [routerLink]="['/home']">The League</a>
+        </div>
+        <div class='clearfix'></div>
+        <div class='navbar-collapse collapse'>
+            <ul class='nav navbar-nav'>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/home']">
+                        <span class='glyphicon glyphicon-home'></span> Home
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/team-list']">
+                        <span class='glyphicon glyphicon-th-list'></span> Teams / Points
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/results-list']">
+                        <span class='glyphicon glyphicon-list-alt'></span> Table
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/transfer-list']">
+                        <span class='glyphicon glyphicon-random'></span> Transfers
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/home']">
+                        <span class='glyphicon glyphicon-stats'></span> Stats
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact:true}" *ngIf="auth.authenticated()" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/team-detail']" [queryParams]="{teamId:auth.teamId(), teamSelection:true}">
+                        <span class='glyphicon glyphicon-user'></span> Set lineup
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{exact:true}" *ngIf="auth.authenticated() && auth.isAdmin()" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/management']">
+                        <span class='glyphicon glyphicon-cog'></span> Management
+                    </a>
+                </li>
+            </ul>
+            
+            <!--<ul class="nav navbar-nav">
+                <li>
+                    <datarequest></datarequest>
+                </li>
+            </ul>-->
+            
+            <ul class="nav navbar-nav">
+                <li>
+                    <button class="btn btn-primary" (click)="auth.login()" *ngIf="!auth.authenticated()">Log In</button>
+                    <button class="btn btn-primary" (click)="auth.logout()" *ngIf="auth.authenticated()">Log Out</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+﻿.total {
+    font-weight: bold;
+    font-size: 150%;
+    color: #fff;
+    background-color: #4189C7;
+}
+
+.playerSelected {
+    color: #fff;
+    font-weight: bold;
+    background-color: #008000;
+}

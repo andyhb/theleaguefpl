@@ -1,0 +1,18 @@
+﻿.goingUp {
+    font-size: 80%;
+    color: #0f0;
+}
+
+.goingDown {
+    font-size: 80%;
+    color: #f00;
+}
+
+.penalty {
+    font-weight: bold;
+    color: #f00;
+}
+
+.pointsBehind {
+    font-size: 80%;
+}

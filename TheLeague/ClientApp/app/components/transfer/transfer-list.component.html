@@ -1,0 +1,22 @@
+﻿<p *ngIf="!transfers"><em>Loading...</em></p>
+
+<div *ngIf="transfers">
+    <table class="table">
+        <thead>
+        <tr>
+            <th class="col-sm-3">Date</th>
+            <th class="col-sm-3">Player</th>
+            <th class="col-sm-3">From</th>
+            <th class="col-sm-3">To</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transfer of transfers">
+            <td>{{ transfer.transferDate | formatDate }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

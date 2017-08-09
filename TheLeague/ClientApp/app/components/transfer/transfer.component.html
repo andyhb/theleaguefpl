@@ -1,0 +1,43 @@
+﻿<div *ngIf="transfers && transfers.length > 0">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Player</th>
+            <th>Total points</th>
+            <th>From</th>
+            <th>To</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let transfer of transfers">
+            <td>{{ transfer.player.fullName }}</td>
+            <td>{{ transfer.player.totalPoints }}</td>
+            <td>
+                <span *ngIf="teamAllocated(transfer.fromTeam)">{{ transfer.fromTeam.name }}</span>
+                <span *ngIf="!teamAllocated(transfer.fromTeam)">Unallocated</span>
+            </td>
+            <td>
+                <select #t (change)="changeTransferToTeam(transfer, t.value)">
+                    <option value="-1">Unallocated</option>
+                    <option *ngFor="let team of teams" [value]="team.id">{{ team.name }}</option>
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    
+    
+</div>
+
+
+<div>
+    <div>
+        <label>Search for player by name: </label>
+        <input class="input-sm" #searchPlayerName />
+        <button class="btn btn-primary" (click)="searchForPlayer(searchPlayerName.value)">Search</button>
+    </div>
+    
+    <players [transferSearch]="true" *ngIf="searchPlayerName.value"></players>
+
+    <button class="btn btn-primary" (click)="completeTransfer()">Make transfer</button>
+</div>

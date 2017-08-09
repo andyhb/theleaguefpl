@@ -1,0 +1,26 @@
+<p *ngIf="!teams"><em>Loading...</em></p>
+
+<div *ngIf="teams" class="col-sm-3 row">
+    <table class='table'>
+        <thead>
+        <tr>
+            <th class="col-sm-8">Team</th>
+            <th [class.col-sm-4]="!auth.isAdmin()" [class.col-sm-3]="auth.isAdmin">Manager</th>
+            <th class="col-sm-1" *ngIf="auth.isAdmin()"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let team of teams" (click)="onSelect(team)" [class.selected]="team === selectedTeam">
+            <td>{{ team.name }}</td>
+            <td>{{ team.managerName}}</td>
+            <td *ngIf="auth.isAdmin()">
+                <a [routerLink]="['/team-detail']" [queryParams]="{teamId:team.id, teamSelection:true}">
+                    <span class='glyphicon glyphicon-cog'></span>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<team-detail *ngIf="selectedTeam" [teamId]="selectedTeam.id"></team-detail>

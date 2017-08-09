@@ -1,0 +1,8 @@
+﻿<div *ngIf="team" class="col-sm-9">
+    
+    <h1>{{ team.name }}</h1>
+    
+    <h2>{{ team.managerName }}</h2>
+
+    <players [teamId]="team.id" [playerSelection]="true" [teamSelection]="isTeamSelection()"></players>
+</div>

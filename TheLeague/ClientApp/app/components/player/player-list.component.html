@@ -1,0 +1,60 @@
+﻿<h3><a href="#players" data-toggle="collapse">{{ pageTitle }}</a></h3>
+
+<p *ngIf="!players && currentGameWeek > 0"><em>Loading...</em></p>
+<p *ngIf="!players && currentGameWeek == 0"><em>N/A</em></p>
+
+<div id="players" *ngIf="players">
+    <table class='table'>
+        <thead>
+        <tr>
+            <th class="col-sm-2">Position</th>
+            <th [class.col-sm-4]="!auth.isAdmin()" [class.col-sm-3]="auth.isAdmin()">Name</th>
+            <th class="col-sm-2">Current</th>
+            <th class="col-sm-2">Next</th>
+            <th class="col-sm-2 text-center">Total</th>
+            <th class="col-sm-2 text-center">Points</th>
+            <th class="col-sm-1" *ngIf="auth.isAdmin() && playerSelection"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let player of players" (click)="togglePlayerSelection(player)" [class.playerSelected]="isSelected(player)">
+            <td>{{ player.position | getPositionString }}</td>
+            <td>{{ player.fullName }}</td>
+            <td><span [innerHTML]="player.currentFixtures | getFixturesString:player.teamName"></span></td>
+            <td><span [innerHTML]="player.nextFixtures | getFixturesString:player.teamName"></span></td>
+            <td class="text-center">{{ player.totalPoints }}</td>
+            <td class="text-center">{{ player.recentPoints }}</td>
+            <td *ngIf="auth.isAdmin() && playerSelection">
+                <span class='glyphicon glyphicon-share-alt' style="color: #337ab7" (click)="transferOut(player)"></span>
+                <!--This should be link to open player transfer page/window/modal... or populate a transfer component-->
+            </td>
+        </tr>
+        <tr class="total" *ngIf="lineupDetails || (playerSelection && selectedPlayers.length > 0)">
+            <td>
+                {{ getFormationString() }}
+                <span class="glyphicon glyphicon-check" *ngIf="isValidFormation() && playerSelection"></span>
+                <span class="glyphicon glyphicon-exclamation-sign" *ngIf="!isValidFormation() && playerSelection"></span>
+            </td>
+            <td>{{ getNumberOfPlayers() }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="text-center">{{ getTeamTotal() }}</td>
+            <td *ngIf="auth.isAdmin() && playerSelection"></td>
+        </tr>
+        </tbody>
+    </table>
+    
+    <div *ngIf="playerSelection">
+        <button *ngIf="!teamSelection" class="btn btn-primary" (click)="populateFromLineup()">Apply current lineup</button>
+        <button *ngIf="!teamSelection" class="btn btn-primary" (click)="populateFromNextGameWeekLineup()">Apply next lineup</button>
+        <button *ngIf="!teamSelection && auth.isAdmin() && selectedPlayers.length > 0" [disabled]="!isValidFormation()" class="btn btn-primary" (click)="addResult()">Update GW {{ currentGameWeek }} Result</button>
+        <button *ngIf="teamSelection && (auth.isAdmin() || teamId == auth.teamId()) && selectedPlayers.length > 0" [disabled]="selectedPlayers.length !== 11 && !isValidFormation()" class="btn btn-primary" (click)="addLineup()">
+            <span *ngIf="!teamLineup">Set</span><span *ngIf="teamLineup">Update</span> GW {{ currentGameWeek + 1 }} Lineup
+        </button>
+        
+        <span *ngIf="!teamSelection && selectedPlayers.length > 0 && auth.isAdmin()">
+            Penalty %: <input class="input-sm" [(ngModel)]="penalty" />
+        </span>
+    </div>
+</div>

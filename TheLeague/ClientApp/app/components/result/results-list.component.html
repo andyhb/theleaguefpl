@@ -1,0 +1,48 @@
+﻿<h3><a href="#results" data-toggle="collapse">League table</a></h3>
+
+<p *ngIf="!results && currentGameWeek > 0"><em>Loading...</em></p>
+<p *ngIf="!results && currentGameWeek == 0"><em>N/A</em></p>
+
+<div id="results" class="collapse in" *ngIf="results">
+    <table class='table'>
+        <thead>
+        <tr *ngIf="!minified && resultWeeks.length > 0">
+            <th class="text-left">
+                <button class="btn btn-xs btn-primary" (click)="toggleBounds('start')"><</button>
+                <select #start (change)="changeBounds('start', start.value)" *ngIf="startVisible">
+                    <option *ngFor="let week of resultWeeks" [value]="week">{{ week }}</option>
+                </select>
+            </th>
+            <th colspan="4">{{ getGameWeekInfo() }}</th>
+            <th class="text-right">
+                <button class="btn btn-xs btn-primary" (click)="toggleBounds('end')">></button>
+                <select #end (change)="changeBounds('end', end.value)" *ngIf="endVisible">
+                    <option *ngFor="let week of resultWeeks" [value]="week">{{ week }}</option>
+                </select>
+            </th>
+        </tr>
+        <tr>
+            <th class="col-sm-1"></th>
+            <th class="col-sm-1">Position</th>
+            <th class="col-sm-3">Team</th>
+            <th class="col-sm-2 text-center">Points</th>
+            <th class="col-sm-2 text-center">Total</th>
+            <th class="col-sm-1"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let teamResult of results">
+            <td><button *ngIf="!minified" class="btn btn-xs glyphicon glyphicon-option-horizontal"></button></td>
+            <td>
+                {{ teamResult.position + 1 }}
+                <span class="glyphicon glyphicon-triangle-bottom goingDown" *ngIf="getMovement(teamResult.position, teamResult.previousPosition) === 'menu-up'"></span>
+                <span class="glyphicon glyphicon-triangle-top goingUp" *ngIf="getMovement(teamResult.position, teamResult.previousPosition) === 'menu-down'"></span>
+            </td>
+            <td>{{ teamResult.teamName }}</td>
+            <td class="text-center">{{ teamResult.recentScore }}<span *ngIf="teamResult.penalty > 0" class="penalty" title="{{teamResult.penalty}}% penalty">*</span></td>
+            <td class="text-center">{{ teamResult.totalScore }}</td>
+            <td class="pointsBehind"><span *ngIf="teamResult.pointsBehind">(-{{ teamResult.pointsBehind }})</span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>

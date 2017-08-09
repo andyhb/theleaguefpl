@@ -1,0 +1,12 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<app @*asp-prerender-module="ClientApp/dist/main-server"*@>
+    <h1 style="color: #337ab7; margin: 20px;">The League App is loading...</h1>
+</app>
+
+<script src="~/dist/vendor.js" asp-append-version="true"></script>
+@section scripts {
+    <script src="~/dist/main-client.js" asp-append-version="true"></script>
+}
