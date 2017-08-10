@@ -16,11 +16,11 @@ export class PlayerTransferred {
 
 export class PlayerTransferredItem {
     transferredFromTeamName: string;
+    transferredToTeamName: string;
     playerName: string;
 }
 
 export class FullTransferItem {
     transferDate: string;
-    transferredToTeamName: string;
     playersTransferred: PlayerTransferredItem[];
 }

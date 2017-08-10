@@ -22,6 +22,20 @@ export class PlayerService {
     }
 
     /**
+     * Get a player by id
+     */
+    getPlayer(playerId: number): Observable<Player> {
+        const params: URLSearchParams = new URLSearchParams();
+        params.set('playerId', playerId.toString());
+        this.options.search = params;
+
+        return (this.http.get(this.playerUrl + 'GetPlayer', this.options)
+            .map(response => response.json())
+            .catch(err => { return this.handleError(err) })
+        ) as any;
+    }
+
+    /**
      * Get all players for a team based on team id
      */
     getPlayersForTeam(teamId: number): Observable<Player[]> {
