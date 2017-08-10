@@ -1,6 +1,8 @@
-﻿<p *ngIf="!transfers"><em>Loading...</em></p>
+﻿<h3><a href="#transfers" data-toggle="collapse">Latest Transfers</a></h3>
 
-<div *ngIf="transfers">
+<p *ngIf="fullTransfers.length < 1"><em>N/A</em></p>
+
+<div id="transfers" class="collapse in" *ngIf="fullTransfers.length > 0">
     <table class="table">
         <thead>
         <tr>
@@ -11,11 +13,17 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let transfer of transfers">
+        <tr *ngFor="let transfer of fullTransfers"  style="border-bottom: solid #ccc 1px;">
             <td>{{ transfer.transferDate | formatDate }}</td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td colspan="3">
+                <table class="table table-striped" style="border: none;">
+                    <tr *ngFor="let playerTransfer of transfer.playersTransferred" style="border: none;">
+                        <td class="col-sm-4" style="border: none;">{{ playerTransfer.playerName }}</td>
+                        <td class="col-sm-4" style="border: none;">{{ playerTransfer.transferredFromTeamName }}</td>
+                        <td class="col-sm-4" style="border: none;">{{ playerTransfer.transferredToTeamName }}</td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         </tbody>
     </table>

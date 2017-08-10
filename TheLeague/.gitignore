@@ -8,6 +8,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+.vs/TheLeague/v14/.suo
+.vs/TheLeague/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
