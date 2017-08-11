@@ -6,8 +6,6 @@ export class GetLineupStringPipe implements PipeTransform {
     transform(players: TeamLineupPlayer[]): string {
         let fullString = "";
 
-        console.log(players);
-
         if (players) {
             
             let gkString = "<strong>GK:</strong> ";

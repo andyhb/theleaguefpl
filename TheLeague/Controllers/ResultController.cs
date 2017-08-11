@@ -27,7 +27,7 @@ namespace TheLeague.Controllers {
         [HttpGet("[action]")]
         public IEnumerable<Result> GetRangeOfResults(int start, int end) {
             var results = GetAllResults();
-            results = results.Where(x => x.Id >= start && x.Id <= end).ToList();
+            results = results.Where(x => x.Id.GameWeek >= start && x.Id.GameWeek <= end).ToList();
             return results;
         }
 
@@ -77,7 +77,13 @@ namespace TheLeague.Controllers {
         public Result UpdateAllGameWeekResultsFromSetLineups(int id) {
             var lineup = _mongoLineupProvider.Get(id).Result;
 
-            var result = GetResult(id) ?? new Result();
+            var result = GetResult(id);
+            var update = true;
+
+            if (result != null && (result.Id == null || result.TeamResults == null)) {
+                result = new Result(id, FplDataProvider.Season);
+                update = false;
+            }
 
             if (lineup != null) {
                 foreach (var teamLineup in lineup.TeamLineups) {
@@ -101,7 +107,11 @@ namespace TheLeague.Controllers {
                 }
             }
 
-            _mongoResultProvider.UpdateResult(id, result);
+            if (update) {
+                _mongoResultProvider.UpdateResult(id, result);
+            } else {
+                _mongoResultProvider.AddResult(result);
+            }
 
             return result;
         }

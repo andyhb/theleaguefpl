@@ -1,6 +1,11 @@
 ﻿export class Result {
-    id: number;
+    id: ResultId;
     teamResults: TeamResult[];
+}
+
+export class ResultId {
+    gameWeek: number;
+    season: number;
 }
 
 export class TeamResult {
