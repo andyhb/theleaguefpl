@@ -6,20 +6,17 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Team</th>
-                <th>Date set</th>
-                <th></th>
+                <th class="col-sm-3">Team</th>
+                <th class="col-sm-7"></th>
+                <th class="col-sm-2">Set</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let teamLineupItem of teamLineups">
-                <td>{{ teamLineupItem.team.name }}</td>
+            <tr *ngFor="let teamLineupItem of teamLineups" [class.bg-danger]="!teamLineupItem.dateSet" [class.text-success]="teamLineupItem.dateSet">
+                <td>{{ teamLineupItem.teamName }}</td>
+                <td class="small"><span *ngIf="teamLineupItem.players && teamLineupItem.players.length > 0" [innerHTML]="teamLineupItem.players | getLineupString"></span></td>
                 <td>
-                    <span *ngIf="teamLineupItem.teamLineup">{{ teamLineupItem.teamLineup.dateSet | formatDate }}</span>
-                </td>
-                <td>
-                    <span class="glyphicon glyphicon-ok lineupSet" *ngIf="teamLineupItem.teamLineup"></span>
-                    <span class="glyphicon glyphicon-remove lineupNotSet" *ngIf="!teamLineupItem.teamLineup"></span>
+                    <span *ngIf="teamLineupItem.dateSet">{{ teamLineupItem.dateSet | formatDate }}</span>
                 </td>
             </tr>
         </tbody>
