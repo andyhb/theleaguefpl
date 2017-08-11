@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using MongoDB.Bson.Serialization.Attributes;
-using TheLeague.Providers;
 
 namespace TheLeague.SharedModels {
     public class Result {
@@ -9,18 +7,25 @@ namespace TheLeague.SharedModels {
         /// This is the gameweek
         /// </summary>
         [BsonId]
-        public int Id;
-
-        public int Season;
+        public ResultId Id;
 
         public List<TeamResult> TeamResults;
 
         public Result() { }
 
-        public Result(int id, int season) {
-            Id = id;
-            Season = season;
+        public Result(int gameWeek, int season) {
+            Id = new ResultId(gameWeek, season);
             TeamResults = new List<TeamResult>();
+        }
+    }
+
+    public class ResultId {
+        public int GameWeek;
+        public int Season;
+
+        public ResultId(int gameWeek, int season) {
+            GameWeek = gameWeek;
+            Season = season;
         }
     }
 

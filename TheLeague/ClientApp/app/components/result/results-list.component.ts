@@ -50,7 +50,7 @@ export class ResultsComponent implements OnInit {
                             this.getFullTeamResults(this.allResults, false);
 
                             this.resultWeeks = this.allResults.map(result => {
-                                return result.id;
+                                return result.id.gameWeek;
                             });
 
                             if (this.resultWeeks.length > 0) {
@@ -88,7 +88,7 @@ export class ResultsComponent implements OnInit {
                     let teamScoreForGw = result.teamResults.filter(teamResult => (teamResult.teamId === team.id))[0];
 
                     // getting the recent from the current gameweek
-                    if (result.id === cgw) {
+                    if (result.id.gameWeek === cgw) {
                         fullTeamResult.recentScore = teamScoreForGw.score;
                         if (teamScoreForGw.penalty > 0) {
                             fullTeamResult.penalty = teamScoreForGw.penalty;
