@@ -1,6 +1,11 @@
 ﻿export class Lineup {
-    id: number;
+    id: LineupId;
     teamLineups: TeamLineup[];
+}
+
+export class LineupId {
+    gameWeek: number;
+    season: number;
 }
 
 export class TeamLineup {
