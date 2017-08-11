@@ -24,6 +24,7 @@ import { LineupsComponent } from './components/lineup/lineups.component';
 import { GetPositionStringPipe } from "./pipes/get-position-string.pipe";
 import { FormatDatePipe } from "./pipes/format-date.pipe";
 import { GetFixturesStringPipe } from "./pipes/get-fixtures-string.pipe";
+import { GetLineupStringPipe } from "./pipes/get-lineup-string.pipe";
 
 import { TeamService } from "./services/team.service";
 import { PlayerService } from "./services/player.service";
@@ -54,7 +55,8 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
         LineupsComponent,
         GetPositionStringPipe,
         FormatDatePipe,
-        GetFixturesStringPipe
+        GetFixturesStringPipe,
+        GetLineupStringPipe
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.

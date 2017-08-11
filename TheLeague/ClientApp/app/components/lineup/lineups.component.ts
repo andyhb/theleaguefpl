@@ -2,11 +2,12 @@
 import { Http } from '@angular/http';
 
 import { Team } from "../../models/team";
-import { Lineup, TeamLineup } from "../../models/lineup";
+import { Lineup, TeamLineup, TeamLineupItem, TeamLineupPlayer } from "../../models/lineup";
 
 import TeamService = require("../../services/team.service");
 import LineupService = require("../../services/lineup.service");
 import ResultService = require("../../services/result.service");
+import PlayerService = require("../../services/player.service");
 
 @Component({
     selector: 'lineups',
@@ -20,7 +21,10 @@ export class LineupsComponent implements OnInit {
     teams: Team[];
     teamLineups: TeamLineupItem[] = [];
 
-    constructor(private teamService: TeamService.TeamService, private lineupService: LineupService.LineupService, private resultService: ResultService.ResultService) { }
+    constructor(private teamService: TeamService.TeamService,
+        private lineupService: LineupService.LineupService,
+        private resultService: ResultService.ResultService,
+        private playerService: PlayerService.PlayerService) { }
 
     ngOnInit(): void {
         this.resultService.getCurrentGameWeek()
@@ -40,14 +44,20 @@ export class LineupsComponent implements OnInit {
                                     this.gameWeekLineups.teamLineups.length > 0) {
                                     this.teams.forEach(team => {
                                         let teamLineupItem = new TeamLineupItem();
-                                        teamLineupItem.team = team;
+                                        teamLineupItem.teamName = team.name;
+                                        teamLineupItem.players = [];
 
                                         let teamLineups = this.gameWeekLineups.teamLineups.filter(teamLineup => {
                                             return team.id === teamLineup.teamId;
                                         });
 
                                         if (teamLineups && teamLineups.length > 0) {
-                                            teamLineupItem.teamLineup = teamLineups[0];
+                                            let thisTeamLineup = teamLineups[0];
+
+                                            if (thisTeamLineup) {
+                                                teamLineupItem.dateSet = thisTeamLineup.dateSet;
+                                                teamLineupItem.players = this.getLineupPlayers(team.id, thisTeamLineup.players);
+                                            }
                                         }
 
                                         this.teamLineups.push(teamLineupItem);
@@ -58,9 +68,27 @@ export class LineupsComponent implements OnInit {
                 }
             );
     }
-}
 
-export class TeamLineupItem {
-    team: Team;
-    teamLineup: TeamLineup;
+    getLineupPlayers(teamId: number, playersSelected: number[]): TeamLineupPlayer[] {
+        let teamLineupPlayers = [];
+
+        this.playerService.getPlayersForTeam(teamId)
+            .subscribe(playersForTeam => {
+                playersSelected.forEach(playerId => {
+
+                    let player = playersForTeam.filter(item => {
+                        return item.id === playerId;
+                    })[0];
+
+                    if (player) {
+                        let teamLineupPlayer = new TeamLineupPlayer();
+                        teamLineupPlayer.name = player.fullName;
+                        teamLineupPlayer.position = player.position;
+                        teamLineupPlayers.push(teamLineupPlayer);
+                    }
+                });
+            });
+
+        return teamLineupPlayers;
+    }
 }
