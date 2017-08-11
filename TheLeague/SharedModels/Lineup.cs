@@ -8,18 +8,25 @@ namespace TheLeague.SharedModels {
         /// This is the gameweek
         /// </summary>
         [BsonId]
-        public int Id;
-
-        public int Season;
+        public LineupId Id;
 
         public List<TeamLineup> TeamLineups;
 
         public Lineup() { }
 
-        public Lineup(int id, int season) {
-            Id = id;
-            Season = season;
+        public Lineup(int gameWeek, int season) {
+            Id = new LineupId(gameWeek, season);
             TeamLineups = new List<TeamLineup>();
+        }
+    }
+
+    public class LineupId {
+        public int GameWeek;
+        public int Season;
+
+        public LineupId(int gameWeek, int season) {
+            GameWeek = gameWeek;
+            Season = season;
         }
     }
 

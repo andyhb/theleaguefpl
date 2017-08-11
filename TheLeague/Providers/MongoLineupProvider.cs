@@ -18,12 +18,12 @@ namespace TheLeague.Providers {
 
         public async Task<List<SharedModels.Lineup>> GetAll(int season) {
             var collection = _database.GetCollection<SharedModels.Lineup>("lineups");
-            var filter = Builders<SharedModels.Lineup>.Filter.Eq("Season", season);
+            var filter = Builders<SharedModels.Lineup>.Filter.Eq("_id.Season", season);
 
             var documents = await collection.Find(filter).ToListAsync();
 
             if (documents != null && documents.Any()) {
-                return documents.OrderBy(x => x.Id).ToList();
+                return documents.OrderBy(x => x.Id.GameWeek).ToList();
             }
 
             return new List<SharedModels.Lineup>();
@@ -36,7 +36,7 @@ namespace TheLeague.Providers {
         public async Task<SharedModels.Lineup> Get(int id, int season) {
             var collection = _database.GetCollection<SharedModels.Lineup>("lineups");
             var builder = Builders<SharedModels.Lineup>.Filter;
-            var filter = builder.Eq("_id", id) & builder.Eq("Season", season);
+            var filter = builder.Eq("_id.GameWeek", id) & builder.Eq("_id.Season", season);
 
             var document = await collection.Find(filter).ToListAsync();
 
@@ -59,7 +59,7 @@ namespace TheLeague.Providers {
         public async Task UpdateLineup(int id, int season, SharedModels.Lineup lineup) {
             var collection = _database.GetCollection<SharedModels.Lineup>("lineups");
             var builder = Builders<SharedModels.Lineup>.Filter;
-            var filter = builder.Eq("_id", id) & builder.Eq("Season", season);
+            var filter = builder.Eq("_id.GameWeek", id) & builder.Eq("_id.Season", season);
             await collection.ReplaceOneAsync(filter, lineup);
         }
     }
