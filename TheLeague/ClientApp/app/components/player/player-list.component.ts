@@ -80,9 +80,7 @@ export class PlayersComponent implements OnInit {
             this.getPlayersForTeam(this.teamId);
         } else {
             // otherwise get the team of the week list
-            if (this.currentGameWeek > 0) {
-                this.getTeamOfTheWeek();
-            }
+            this.getTeamOfTheWeek();
         }
     }
 

@@ -44,8 +44,12 @@ namespace TheLeague.Controllers {
         }
 
         [HttpGet("[action]")]
+        public IEnumerable<Player> FindPlayer(string name) {
+            return _mongoPlayerProvider.Find(name).Result;
+        }
+
+        [HttpGet("[action]")]
         public IEnumerable<Player> GetTeamOfTheWeek() {
-            // get all players in any team
             var allTeams = _mongoTeamProvider.GetAll().Result;
             var allTeamPlayers = new List<Player>();
 
@@ -55,64 +59,51 @@ namespace TheLeague.Controllers {
 
             var teamOfTheWeek = new List<Player>();
 
-            // get highest scoring goalkeeper on any team
             var goalkeeper = allTeamPlayers.Where(x => x.Position == 1).OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).FirstOrDefault();
             teamOfTheWeek.Add(goalkeeper);
 
-            // get four highest scoring defenders on any team (4-0-0)
-            var defenders = allTeamPlayers.Where(x => x.Position == 2).OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).Take(4).ToList();
-            teamOfTheWeek.AddRange(defenders);
+            var playersToAdd = new List<Player>();
 
-            // get highest scoring midfielders and select the minimum of 3 (4-3-0)
+            var defenders = allTeamPlayers.Where(x => x.Position == 2).OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).Take(5).ToList();
+            playersToAdd.AddRange(defenders);
+
             var midfielders = allTeamPlayers.Where(x => x.Position == 3).OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).Take(5).ToList();
-            var threeMid = midfielders.Take(3);
-            var fourthMid = midfielders.Skip(3).FirstOrDefault();
-            var fifthMid = midfielders.Skip(4).FirstOrDefault();
+            playersToAdd.AddRange(midfielders);
 
-            var midfieldersToAdd = new List<Player>();
-
-            teamOfTheWeek.AddRange(threeMid);
-
-            // get highest scoring forwards and select the minimum of 1 (4-3-1)
             var forwards = allTeamPlayers.Where(x => x.Position == 4).OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).Take(3).ToList();
-            var firstFor = forwards.FirstOrDefault();
-            var secondFor = forwards.Skip(1).FirstOrDefault();
-            var thirdFor = forwards.Skip(2).FirstOrDefault();
+            playersToAdd.AddRange(forwards);
 
-            var forwardsToAdd = new List<Player> { firstFor };
+            var highestScoringOutfieldPlayers = GetValidTeamOfWeekPlayers(playersToAdd.OrderByDescending(x => x.RecentPoints).ThenByDescending(x => x.TotalPoints).ToList());
+            teamOfTheWeek.AddRange(highestScoringOutfieldPlayers);
 
-            // determine the rest of the attacking positions
+            return teamOfTheWeek.OrderBy(x => x.Position);
+        }
 
-            // add 4th mid (4-4-1)
-            if (fourthMid.RecentPoints >= secondFor.RecentPoints) {
-                midfieldersToAdd.Add(fourthMid);
+        public static readonly Dictionary<int, int> PositionalBounds = new Dictionary<int, int> {
+            {2, 5},
+            {3, 5},
+            {4, 3}
+        };
 
-                // add 5th mid (4-5-1)
-                if (fifthMid.RecentPoints >= secondFor.RecentPoints) {
-                    midfieldersToAdd.Add(fifthMid);
+        public List<Player> GetValidTeamOfWeekPlayers(List<Player> players) {
+            var playersOfTheWeek = new List<Player>();
+
+            foreach (var player in players) {
+                // get number of players of this players position we have already added
+                var playersInSamePosition = playersOfTheWeek.Count(x => x.Position == player.Position);
+
+                // if there's still room for more then add this player too
+                if (playersInSamePosition < PositionalBounds[player.Position]) {
+                    playersOfTheWeek.Add(player);
                 }
-            } else {
-                // or 2nd forward (4-3-2)
-                forwardsToAdd.Add(secondFor);
 
-                // add 4th mid (4-4-2)
-                if (fourthMid.RecentPoints >= thirdFor.RecentPoints) {
-                    midfieldersToAdd.Add(fourthMid);
-                } else {
-                    // or 3rd forward (4-3-3)
-                    forwardsToAdd.Add(thirdFor);
+                // we have enough players so bail
+                if (playersOfTheWeek.Count == 10) {
+                    break;
                 }
             }
 
-            teamOfTheWeek.AddRange(midfieldersToAdd);
-            teamOfTheWeek.AddRange(forwardsToAdd);
-
-            return teamOfTheWeek;
-        }
-
-        [HttpGet("[action]")]
-        public IEnumerable<Player> FindPlayer(string name) {
-            return _mongoPlayerProvider.Find(name).Result;
+            return playersOfTheWeek;
         }
     }
 }
