@@ -18,12 +18,14 @@ namespace TheLeague.SharedModels {
         }
 
         public string SearchName;
-
         public string WebName;
 
         public int TotalPoints;
         public int RecentPoints;
+
         public int ChanceOfPlayingPercentage;
+        public string News;
+
         public int Position;
 
         public string TeamName;
@@ -33,7 +35,7 @@ namespace TheLeague.SharedModels {
 
         public Player() { }
 
-        public Player(int id, string forename, string surname, int totalPoints, int recentPoints, int chanceOfPlayingPercentage, int position, string webname) {
+        public Player(int id, string forename, string surname, int totalPoints, int recentPoints, int chanceOfPlayingPercentage, int position, string webname, string news) {
             Id = id;
             Forename = forename;
             Surname = surname;
@@ -43,6 +45,7 @@ namespace TheLeague.SharedModels {
             Position = position;
             SearchName = ToAscii(FullName);
             WebName = webname;
+            News = news;
         }
 
         public string ToAscii(string s) {
