@@ -18,7 +18,10 @@
         </thead>
         <tbody>
         <tr *ngFor="let player of players" (click)="togglePlayerSelection(player)" [class.playerSelected]="isSelected(player)">
-            <td>{{ player.position | getPositionString }}</td>
+            <td>
+                {{ player.position | getPositionString }}
+                <span *ngIf="playerSelection && (player.chanceOfPlayingPercentage > -1 && player.chanceOfPlayingPercentage < 100)" class="glyphicon glyphicon-warning-sign text-warning" title="{{ player.news }}"></span>
+            </td>
             <td>{{ player.fullName }}</td>
             <td><span [innerHTML]="player.currentFixtures | getFixturesString:player.teamName"></span></td>
             <td><span [innerHTML]="player.nextFixtures | getFixturesString:player.teamName"></span></td>

@@ -8,6 +8,8 @@
     currentFixtures: EventFixture[];
     nextFixtures: EventFixture[];
     webName: string;
+    chanceOfPlayingPercentage: number;
+    news: string;
 }
 
 export class EventFixture {
