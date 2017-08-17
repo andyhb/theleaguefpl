@@ -95,7 +95,7 @@ namespace TheLeague.Providers {
                 var updatePlayer = new Player((int) player.id, player.first_name.ToString(),
                     player.second_name.ToString(), (int) player.total_points, (int) player.event_points,
                     player.chance_of_playing_this_round != null ? (int) player.chance_of_playing_this_round : 0,
-                    (int) player.element_type);
+                    (int) player.element_type, player.web_name.ToString());
 
                 var playersTeam = PremierLeagueTeamInfo.FirstOrDefault(x => x.Id == (int) player.team);
                 if (playersTeam != null) {
@@ -111,7 +111,8 @@ namespace TheLeague.Providers {
                         updatePlayer.RecentPoints != storedPlayer.RecentPoints ||
                         updatePlayer.ChanceOfPlayingPercentage != storedPlayer.ChanceOfPlayingPercentage ||
                         updatePlayer.Surname != storedPlayer.Surname ||
-                        updatePlayer.NextFixtures != storedPlayer.NextFixtures) {
+                        updatePlayer.NextFixtures != storedPlayer.NextFixtures ||
+                        updatePlayer.WebName != storedPlayer.WebName) {
 
                         playersProvider.UpdatePlayer(updatePlayer);
                     }

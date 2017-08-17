@@ -7,6 +7,7 @@
     teamName: string;
     currentFixtures: EventFixture[];
     nextFixtures: EventFixture[];
+    webName: string;
 }
 
 export class EventFixture {

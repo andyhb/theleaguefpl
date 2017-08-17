@@ -52,12 +52,12 @@ namespace TheLeague.Providers {
         public async Task<List<SharedModels.Player>> Find(string name) {
             var collection = _database.GetCollection<SharedModels.Player>("players");
             var builder = Builders<SharedModels.Player>.Filter;
-            var filter = builder.Regex("SearchName", new BsonRegularExpression(Regex.Escape(name), "i"));
+            var filter = builder.Regex("SearchName", new BsonRegularExpression(Regex.Escape(name), "i")) | builder.Regex("WebName", new BsonRegularExpression(Regex.Escape(name), "i"));
 
             var document = await collection.Find(filter).ToListAsync();
 
             if (document != null) {
-                return document.OrderBy(x => x.Surname).ThenBy(x => x.Forename).ToList();
+                return document.OrderBy(x => x.WebName).ThenBy(x => x.Surname).ThenBy(x => x.Forename).ToList();
             }
 
             return new List<SharedModels.Player>();

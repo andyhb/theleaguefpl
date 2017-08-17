@@ -82,7 +82,7 @@ export class LineupsComponent implements OnInit {
 
                     if (player) {
                         let teamLineupPlayer = new TeamLineupPlayer();
-                        teamLineupPlayer.name = player.fullName;
+                        teamLineupPlayer.name = player.webName;
                         teamLineupPlayer.position = player.position;
                         teamLineupPlayers.push(teamLineupPlayer);
                     }
