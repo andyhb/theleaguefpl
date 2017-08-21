@@ -120,7 +120,9 @@ export class ResultsComponent implements OnInit {
             });
             
             allIncludingLatestResults.forEach(fullResult => {
-                fullResult.totalScore += fullResult.recentScore;
+                if (fullResult.recentScore) {
+                    fullResult.totalScore += fullResult.recentScore;
+                }
             });
 
             // order most recent
