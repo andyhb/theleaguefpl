@@ -12,7 +12,7 @@ namespace TheLeague.Providers {
     public class FplDataProvider {
         private static readonly string _baseUrl = "https://fantasy.premierleague.com/drf/";
 
-        private const string FullDataApi = "bootstrap-static1";
+        private const string FullDataApi = "bootstrap-static";
         private const string PlayerApi = "element-summary";
 
         public static int GameWeek;
