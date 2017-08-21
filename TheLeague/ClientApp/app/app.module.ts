@@ -6,7 +6,6 @@ import { FormsModule }   from '@angular/forms';
 import { AppComponent } from './components/app/app.component'
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
 import { HomeComponent } from './components/home/home.component';
-import { DataRequestComponent } from './components/data/datarequest.component';
 import { ManagementComponent } from './components/management/management.component';
 
 import { TeamsComponent } from './components/team/team-list.component';
@@ -28,7 +27,6 @@ import { GetLineupStringPipe } from "./pipes/get-lineup-string.pipe";
 
 import { TeamService } from "./services/team.service";
 import { PlayerService } from "./services/player.service";
-import { DataService } from "./services/data.service";
 import { ResultService } from "./services/result.service";
 import { LineupService } from "./services/lineup.service";
 import { TransferService } from "./services/transfer.service";
@@ -44,7 +42,6 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
         AppComponent,
         NavMenuComponent,
         HomeComponent,
-        DataRequestComponent,
         ManagementComponent,
         TeamsComponent,
         TeamDetailComponent,
@@ -76,7 +73,6 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
     providers: [
         TeamService,
         PlayerService,
-        DataService,
         ResultService,
         LineupService,
         TransferService,

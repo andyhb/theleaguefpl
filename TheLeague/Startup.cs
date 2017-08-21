@@ -24,7 +24,8 @@ namespace TheLeague {
         }
 
         private void CheckForUpdates(object state) {
-            FplDataProvider.GetAllData();
+            var fplDataProvider = new FplDataProvider(new MongoEventProvider(), new MongoPlayerProvider());
+            fplDataProvider.GetAllData();
             _timer.Change((int)TimeSpan.FromMinutes(60).TotalMilliseconds, Timeout.Infinite);
         }
 
@@ -34,13 +35,13 @@ namespace TheLeague {
         public void ConfigureServices(IServiceCollection services) {
             // Add framework services.
             services.AddMvc();
-            services.AddTransient<IMongoFplDataRequestProvider, MongoFplDataRequestProvider>();
             services.AddTransient<IMongoLineupProvider, MongoLineupProvider>();
             services.AddTransient<IMongoManagerProvider, MongoManagerProvider>();
             services.AddTransient<IMongoResultProvider, MongoResultProvider>();
             services.AddTransient<IMongoPlayerProvider, MongoPlayerProvider>();
             services.AddTransient<IMongoTeamProvider, MongoTeamProvider>();
             services.AddTransient<IMongoTransferProvider, MongoTransferProvider>();
+            services.AddTransient<IMongoEventProvider, MongoEventProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

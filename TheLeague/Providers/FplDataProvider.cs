@@ -5,20 +5,29 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TheLeague.Controllers;
+using TheLeague.Providers.Interfaces;
 using TheLeague.SharedModels;
 
 namespace TheLeague.Providers {
     public class FplDataProvider {
         private static readonly string _baseUrl = "https://fantasy.premierleague.com/drf/";
 
-        private const string FullDataApi = "bootstrap-static";
+        private const string FullDataApi = "bootstrap-static1";
         private const string PlayerApi = "element-summary";
 
         public static int GameWeek;
         public static int Season = 2;
         public static List<PremierLeagueTeam> PremierLeagueTeamInfo = new List<PremierLeagueTeam>();
 
-        public static string GetApiLocation(string type) {
+        private readonly IMongoEventProvider _mongoEventProvider;
+        private readonly IMongoPlayerProvider _mongoPlayerProvider;
+
+        public FplDataProvider(IMongoEventProvider mongoEventProvider, IMongoPlayerProvider mongoPlayerProvider) {
+            _mongoEventProvider = mongoEventProvider;
+            _mongoPlayerProvider = mongoPlayerProvider;
+        }
+
+        public string GetApiLocation(string type) {
             switch (type) {
                 case PlayerApi:
                     return _baseUrl + "/" + PlayerApi;
@@ -27,7 +36,7 @@ namespace TheLeague.Providers {
             return _baseUrl + FullDataApi;
         }
 
-        public static void GetAllData() {
+        public void GetAllData() {
             using (var httpClient = new HttpClient()) {
                 var response = httpClient.GetAsync(GetApiLocation(null)).Result;
 
@@ -35,28 +44,43 @@ namespace TheLeague.Providers {
 
                     dynamic data = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-                    SetGameWeek(data.events);
+                    GetEvents(data.events);
                     GetTeams(data.teams);
                     GetPlayers(data.elements);
-
-                    AddDataRequest();
                 }
+            }
+
+            var currentEvent = _mongoEventProvider.GetCurrentEvent().Result;
+            if (currentEvent?.Id != null) {
+                GameWeek = currentEvent.Id.GameWeek;
             }
         }
 
-        public static void SetGameWeek(dynamic data) {
+        public void GetEvents(dynamic data) {
+            var storedEvents = _mongoEventProvider.GetAll().Result;
+            var newEvents = new List<Event>();
+
             foreach (var fplEvent in data) {
-                var isCurrent = (bool) fplEvent.is_current;
-                var id = (int) fplEvent.id;
+                var newEvent = new Event((int)fplEvent.id, Season, fplEvent.name.ToString(), (bool)fplEvent.is_current, (bool)fplEvent.is_next);
 
-                if (isCurrent) {
-                    GameWeek = id;
-                    break;
+                var storedEvent = storedEvents.FirstOrDefault(x => x.Id.GameWeek == newEvent.Id.GameWeek && x.Id.Season == newEvent.Id.Season);
+
+                if (storedEvent != null) {
+                    if (storedEvent.Name != newEvent.Name || storedEvent.IsCurrent != newEvent.IsCurrent ||
+                        storedEvent.IsNext != newEvent.IsCurrent) {
+                        _mongoEventProvider.UpdateEvent(storedEvent.Id.GameWeek, storedEvent.Id.Season, newEvent);
+                    }
+                } else {
+                    newEvents.Add(newEvent);
                 }
+            }
+
+            if (newEvents.Any()) {
+                _mongoEventProvider.AddEvents(newEvents);
             }
         }
 
-        public static void GetTeams(dynamic data) {
+        public void GetTeams(dynamic data) {
             foreach (var team in data) {
                 // get current fixtures
                 var currentFixtures = new List<EventFixture>();
@@ -89,9 +113,8 @@ namespace TheLeague.Providers {
             }
         }
 
-        public static void GetPlayers(dynamic data) {
-            var playersProvider = new MongoPlayerProvider();
-            var storedPlayers = playersProvider.GetAll().Result;
+        public void GetPlayers(dynamic data) {
+            var storedPlayers = _mongoPlayerProvider.GetAll().Result;
             var newPlayers = new List<Player>();
 
             foreach (var player in data) {
@@ -119,30 +142,16 @@ namespace TheLeague.Providers {
                         updatePlayer.WebName != storedPlayer.WebName ||
                         updatePlayer.News != storedPlayer.News) {
 
-                        playersProvider.UpdatePlayer(updatePlayer);
+                        _mongoPlayerProvider.UpdatePlayer(updatePlayer);
                     }
-
-                    //if (GameWeek > 0) {
-                        //playersProvider.UpdatePlayerResult(new PlayerResult(GameWeek, Season, updatePlayer.Id,
-                            //updatePlayer.RecentPoints));
-                    //}
                 } else {
                     newPlayers.Add(updatePlayer);
                 }
             }
 
             if (newPlayers.Any()) {
-                playersProvider.AddPlayers(newPlayers);
+                _mongoPlayerProvider.AddPlayers(newPlayers);
             }
-        }
-
-        public static void AddDataRequest() {
-            var dataProvider = new MongoFplDataRequestProvider();
-            var dataRequest = new FplDataRequest() {
-                RequestDate = DateTime.UtcNow
-            };
-
-            dataProvider.AddDataRequest(dataRequest);
         }
     }
 }
