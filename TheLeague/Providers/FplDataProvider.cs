@@ -30,13 +30,17 @@ namespace TheLeague.Providers {
         public static void GetAllData() {
             using (var httpClient = new HttpClient()) {
                 var response = httpClient.GetAsync(GetApiLocation(null)).Result;
-                dynamic data = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
 
-                SetGameWeek(data.events);
-                GetTeams(data.teams);
-                GetPlayers(data.elements);
+                if (response.IsSuccessStatusCode) {
 
-                AddDataRequest();
+                    dynamic data = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result);
+
+                    SetGameWeek(data.events);
+                    GetTeams(data.teams);
+                    GetPlayers(data.elements);
+
+                    AddDataRequest();
+                }
             }
         }
 
