@@ -50,16 +50,23 @@ export class Auth {
                             localStorage.removeItem('redirect_url');
                         }
 
-                        let managerId = this.managerId();
-
-                        if (typeof managerId === 'number') {
-                            this.teamService.getCurrentTeam(managerId)
-                                .subscribe(
-                                    currentTeam => this.currentTeam = currentTeam
-                                );
-                        }
+                        this.setCurrentTeam();
                     });
             });
+    }
+
+    public setCurrentTeam() {
+        let managerId = this.managerId();
+
+        if (typeof managerId === 'number') {
+            this.teamService.getCurrentTeam(managerId)
+                .subscribe(
+                currentTeam => {
+                    this.currentTeam = currentTeam;
+                    localStorage.setItem('team_id', JSON.stringify(this.currentTeam.id));
+                }
+                );
+        }
     }
 
     public login() {
@@ -75,6 +82,7 @@ export class Auth {
 
     public logout() {
         this.currentTeam = null;
+        localStorage.removeItem('team_id');
 
         // Remove token from localStorage
         localStorage.removeItem('id_token');
@@ -106,6 +114,12 @@ export class Auth {
     public teamId() {
         if (this.currentTeam) {
             return this.currentTeam.id;
+        } else {
+            var teamId = JSON.parse(localStorage.getItem('team_id'));
+
+            if (teamId) {
+                return teamId;
+            }
         }
 
         return null;

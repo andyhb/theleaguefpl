@@ -1,6 +1,6 @@
 ﻿import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { Http } from '@angular/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Team } from "../../models/team";
 
@@ -20,7 +20,7 @@ export class TeamDetailComponent implements OnInit, OnChanges {
     @Input() teamSelection: boolean;
     init: boolean;
 
-    constructor(private route: ActivatedRoute, private service: TeamService.TeamService, private managerService: ManagerService.ManagerService, private auth: AuthService.Auth) {}
+    constructor(private route: ActivatedRoute, private router: Router, private service: TeamService.TeamService, private managerService: ManagerService.ManagerService, private auth: AuthService.Auth) {}
 
     ngOnInit(): void {
         if (!this.teamId) {
@@ -35,6 +35,10 @@ export class TeamDetailComponent implements OnInit, OnChanges {
             if (this.auth.teamId()) {
                 this.teamId = this.auth.teamId();
             }
+        }
+
+        if (!this.teamId) {
+            this.router.navigateByUrl('home');
         }
 
         if (!this.teamSelection) {
