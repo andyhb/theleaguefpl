@@ -61,6 +61,7 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'team-list', component: TeamsComponent },
+            { path: 'lineups', component: LineupsComponent },
             { path: 'results-list', component: ResultsComponent },
             { path: 'transfer-list', component: TransferListComponent },
             { path: 'team-detail', component: TeamDetailComponent, canActivate: [AuthGuard]/*, data: { roles: ['admin'] } */ },

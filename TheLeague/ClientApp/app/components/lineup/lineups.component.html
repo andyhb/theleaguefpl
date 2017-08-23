@@ -1,4 +1,12 @@
-﻿<h3><a href="#lineups" data-toggle="collapse">Gameweek {{ nextGameWeek }} Lineups</a></h3>
+﻿<h3>
+    <a href="#lineups" data-toggle="collapse">Gameweek {{ selectedWeek }} Lineups</a>
+    <span *ngIf="!minified">
+        <button class="btn btn-xs btn-primary" (click)="toggleSelectedWeek()">></button>
+        <select #selectedWeek (change)="changeSelectedWeek(selectedWeek.value)" *ngIf="selectedWeekVisible">
+            <option *ngFor="let week of lineupWeeks" [value]="week">{{ week }}</option>
+        </select>
+    </span>
+</h3>
 
 <p *ngIf="teamLineups.length === 0"><em>No lineups have been set!</em></p>
 

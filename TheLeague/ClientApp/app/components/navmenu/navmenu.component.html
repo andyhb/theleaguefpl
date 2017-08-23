@@ -23,6 +23,11 @@
                     </a>
                 </li>
                 <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
+                    <a [routerLink]="['/lineups']">
+                        <span class='glyphicon glyphicon-calendar'></span> Lineups
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']" data-toggle='collapse' data-target='.navbar-collapse'>
                     <a [routerLink]="['/results-list']">
                         <span class='glyphicon glyphicon-list-alt'></span> Table
                     </a>
