@@ -59,5 +59,7 @@
         <span *ngIf="!teamSelection && selectedPlayers.length > 0 && auth.isAdmin()">
             Penalty %: <input class="input-sm" [(ngModel)]="penalty" />
         </span>
+        
+        <span *ngIf="successfulNotification" class="text-success">Lineup successfully updated at {{ successfulNotification | formatDate }}!</span>
     </div>
 </div>

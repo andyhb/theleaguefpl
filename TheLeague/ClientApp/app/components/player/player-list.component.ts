@@ -47,6 +47,8 @@ export class PlayersComponent implements OnInit {
     teamResult: TeamResult;
     teamLineup: TeamLineup;
 
+    successfulNotification: string;
+
     constructor(private playerService: PlayerService.PlayerService,
         private auth: AuthService.Auth,
         private resultService: ResultService.ResultService,
@@ -230,7 +232,11 @@ export class PlayersComponent implements OnInit {
 
             this.lineupService.addLineup(this.currentGameWeek + 1, this.teamId, selectedPlayerIds)
                 .subscribe(
-                teamLineup => this.teamLineup = teamLineup
+                    teamLineup => {
+                        this.teamLineup = teamLineup;
+
+                        this.successfulNotification = this.teamLineup.dateSet;
+                    }
                 );
         }
     }
