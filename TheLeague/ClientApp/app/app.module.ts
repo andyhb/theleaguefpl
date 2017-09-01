@@ -17,6 +17,9 @@ import { TransferComponent } from './components/transfer/transfer.component';
 import { TransferListComponent } from './components/transfer/transfer-list.component';
 
 import { ResultsComponent } from './components/result/results-list.component';
+import { TeamStatsComponent } from './components/team/team-stats.component';
+
+import { GoogleChartComponent } from './components/charts/googlechart.component';
 
 import { LineupsComponent } from './components/lineup/lineups.component';
 
@@ -31,6 +34,7 @@ import { ResultService } from "./services/result.service";
 import { LineupService } from "./services/lineup.service";
 import { TransferService } from "./services/transfer.service";
 import { ManagerService } from "./services/manager.service";
+import { StatsService } from "./services/stats.service";
 
 import { Auth } from "./services/auth.service";
 import { AuthGuard } from "./services/auth.guard";
@@ -49,6 +53,8 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
         TransferComponent,
         TransferListComponent,
         ResultsComponent,
+        TeamStatsComponent,
+        GoogleChartComponent,
         LineupsComponent,
         GetPositionStringPipe,
         FormatDatePipe,
@@ -78,6 +84,7 @@ import { AUTH_PROVIDERS } from 'angular2-jwt';
         LineupService,
         TransferService,
         ManagerService,
+        StatsService,
         AUTH_PROVIDERS,
         Auth,
         AuthGuard
