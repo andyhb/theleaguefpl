@@ -61,29 +61,31 @@ export class PlayersComponent implements OnInit {
 
         this.resultService.getCurrentGameWeek()
             .subscribe(
-            currentGameWeek => this.currentGameWeek = currentGameWeek
+                currentGameWeek => {
+                    this.currentGameWeek = currentGameWeek;
+
+                    if (this.transferSearch) {
+                        this.pageTitle = "Search for players to transfer";
+
+                        this.searchParam = this.playerService.searchParam;
+
+                        this.playerService.searchParamChange
+                            .subscribe(searchParam => {
+                                this.searchParam = searchParam;
+                                this.getTransferPlayers();
+                            });
+
+                        this.getTransferPlayers();
+                    } else if (this.teamId || this.teamId === 0) {
+                        this.pageTitle = "Click on a player to toggle their selection";
+
+                        this.getPlayersForTeam(this.teamId);
+                    } else {
+                        // otherwise get the team of the week list
+                        this.getTeamOfTheWeek();
+                    }
+                }
             );
-
-        if (this.transferSearch) {
-            this.pageTitle = "Search for players to transfer";
-
-            this.searchParam = this.playerService.searchParam;
-
-            this.playerService.searchParamChange
-                .subscribe(searchParam => {
-                    this.searchParam = searchParam;
-                    this.getTransferPlayers();
-                });
-
-            this.getTransferPlayers();
-        } else if (this.teamId || this.teamId === 0) {
-            this.pageTitle = "Click on a player to toggle their selection";
-
-            this.getPlayersForTeam(this.teamId);
-        } else {
-            // otherwise get the team of the week list
-            this.getTeamOfTheWeek();
-        }
     }
 
     ngOnChanges(changes): void {
