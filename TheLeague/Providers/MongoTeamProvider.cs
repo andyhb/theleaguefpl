@@ -23,7 +23,7 @@ namespace TheLeague.Providers {
             var documents = await collection.Find(filter).ToListAsync();
 
             if (documents != null && documents.Any()) {
-                return documents.ToList();
+                return documents.OrderBy(x => x.Id).ToList();
             }
 
             return new List<SharedModels.Team>();
