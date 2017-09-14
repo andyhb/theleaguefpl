@@ -33,6 +33,8 @@ export class PlayersComponent implements OnInit {
     selectedPlayers: Player[] = [];
     currentGameWeekLineupPlayers: Player[] = [];
 
+    showingNewsFor: number[] = [];
+
     validFormations: string[] = [
         "3-4-3",
         "3-5-2",
@@ -262,5 +264,23 @@ export class PlayersComponent implements OnInit {
                         .filter(player => (selectedPlayers.players.indexOf(player.id) > -1));
                 }
             );
+    }
+
+    toggleShowingNews(event, playerId: number): void {
+        event.stopPropagation();
+
+        if (this.showingNewsFor.indexOf(playerId) > -1) {
+            this.showingNewsFor.splice(this.showingNewsFor.indexOf(playerId), 1);
+        } else {
+            this.showingNewsFor.push(playerId);
+        }
+    }
+
+    isShowingNews(playerId: number): boolean {
+        if (this.showingNewsFor.indexOf(playerId) > -1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

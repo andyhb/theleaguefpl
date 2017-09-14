@@ -20,7 +20,8 @@
         <tr *ngFor="let player of players" (click)="togglePlayerSelection(player)" [class.playerSelected]="isSelected(player)">
             <td>
                 {{ player.position | getPositionString }}
-                <span *ngIf="playerSelection && (player.chanceOfPlayingPercentage > -1 && player.chanceOfPlayingPercentage < 100)" class="glyphicon glyphicon-warning-sign text-warning" title="{{ player.news }}"></span>
+                <a (click)="toggleShowingNews($event, player.id)" *ngIf="playerSelection && (player.chanceOfPlayingPercentage > -1 && player.chanceOfPlayingPercentage < 100)" class="glyphicon glyphicon-warning-sign text-warning" title="{{ player.news }}"></a>
+                <div class="text-danger" *ngIf="isShowingNews(player.id)">{{player.news}}</div>
             </td>
             <td>{{ player.fullName }}</td>
             <td><span [innerHTML]="player.currentFixtures | getFixturesString:player.teamName"></span></td>
