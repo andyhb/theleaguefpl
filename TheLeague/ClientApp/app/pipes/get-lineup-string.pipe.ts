@@ -15,13 +15,21 @@ export class GetLineupStringPipe implements PipeTransform {
 
             let gk = players.filter(player => (player.position === 1))[0];
 
-            gkString += gk.name;
+            if (gk) {
+                gkString += gk.name;
+            } else {
+                gkString += "N/A";
+            }
 
             let defs = players.filter(player => {
                     return player.position === 2;
                 })
                 .map(player => {
-                    return player.name;
+                    if (player) {
+                        return player.name;
+                    } else {
+                        return "N/A";
+                    }
                 });
 
             defString += defs.join(', ');
@@ -30,7 +38,11 @@ export class GetLineupStringPipe implements PipeTransform {
                     return player.position === 3;
                 })
                 .map(player => {
-                    return player.name;
+                    if (player) {
+                        return player.name;
+                    } else {
+                        return "N/A";
+                    }
                 });
 
             midString += mids.join(', ');
@@ -39,7 +51,11 @@ export class GetLineupStringPipe implements PipeTransform {
                     return player.position === 4;
                 })
                 .map(player => {
-                    return player.name;
+                    if (player) {
+                        return player.name;
+                    } else {
+                        return "N/A";
+                    }
                 });
 
             forString += fors.join(', ');
