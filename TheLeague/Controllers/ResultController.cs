@@ -12,11 +12,13 @@ namespace TheLeague.Controllers {
         private readonly IMongoResultProvider _mongoResultProvider;
         private readonly IMongoPlayerProvider _mongoPlayerProvider;
         private readonly IMongoLineupProvider _mongoLineupProvider;
+        private readonly IMongoEventProvider _mongoEventProvider;
 
-        public ResultController(IMongoResultProvider mongoResultProvider, IMongoPlayerProvider mongoPlayerProvider, IMongoLineupProvider mongoLineupProvider) {
+        public ResultController(IMongoResultProvider mongoResultProvider, IMongoPlayerProvider mongoPlayerProvider, IMongoLineupProvider mongoLineupProvider, IMongoEventProvider mongoEventProvider) {
             _mongoResultProvider = mongoResultProvider;
             _mongoPlayerProvider = mongoPlayerProvider;
             _mongoLineupProvider = mongoLineupProvider;
+            _mongoEventProvider = mongoEventProvider;
         }
 
         [HttpGet("[action]")]
@@ -125,7 +127,13 @@ namespace TheLeague.Controllers {
 
         [HttpGet("[action]")]
         public int GetCurrentGameWeek() {
-            return FplDataProvider.GameWeek;
+            var currentEvent = _mongoEventProvider.GetCurrentEvent().Result;
+
+            if (currentEvent?.Id != null) {
+                return currentEvent.Id.GameWeek;
+            }
+
+            return 0;
         }
     }
 }
