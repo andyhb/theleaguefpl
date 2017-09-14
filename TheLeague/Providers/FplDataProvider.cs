@@ -15,7 +15,6 @@ namespace TheLeague.Providers {
         private const string FullDataApi = "bootstrap-static";
         private const string PlayerApi = "element-summary";
 
-        public static int GameWeek;
         public static int Season = 2;
         public static List<PremierLeagueTeam> PremierLeagueTeamInfo = new List<PremierLeagueTeam>();
 
@@ -48,11 +47,6 @@ namespace TheLeague.Providers {
                     GetTeams(data.teams);
                     GetPlayers(data.elements);
                 }
-            }
-
-            var currentEvent = _mongoEventProvider.GetCurrentEvent().Result;
-            if (currentEvent?.Id != null) {
-                GameWeek = currentEvent.Id.GameWeek;
             }
         }
 

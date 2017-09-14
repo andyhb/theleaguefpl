@@ -11,9 +11,11 @@ namespace TheLeague.Controllers {
     public class LineupController : Controller {
 
         private readonly IMongoLineupProvider _mongoLineupProvider;
+        private readonly IMongoEventProvider _mongoEventProvider;
 
-        public LineupController(IMongoLineupProvider mongoLineupProvider) {
+        public LineupController(IMongoLineupProvider mongoLineupProvider, IMongoEventProvider mongoEventProvider) {
             _mongoLineupProvider = mongoLineupProvider;
+            _mongoEventProvider = mongoEventProvider;
         }
 
         [HttpGet("[action]")]
@@ -69,7 +71,13 @@ namespace TheLeague.Controllers {
 
         [HttpGet("[action]")]
         public int GetCurrentGameWeek() {
-            return FplDataProvider.GameWeek;
+            var currentEvent = _mongoEventProvider.GetCurrentEvent().Result;
+
+            if (currentEvent?.Id != null) {
+                return currentEvent.Id.GameWeek;
+            }
+
+            return 0;
         }
     }
 }
