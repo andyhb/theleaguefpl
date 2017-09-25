@@ -79,22 +79,35 @@ namespace TheLeague.Controllers {
             return teamOfTheWeek.OrderBy(x => x.Position);
         }
 
-        public static readonly Dictionary<int, int> PositionalBounds = new Dictionary<int, int> {
+        public static readonly Dictionary<int, int> PositionalBoundsLower = new Dictionary<int, int> {
+            {2, 3},
+            {3, 3},
+            {4, 1}
+        };
+
+        public static readonly Dictionary<int, int> PositionalBoundsUpper = new Dictionary<int, int> {
             {2, 5},
             {3, 5},
             {4, 3}
         };
 
-        public List<Player> GetValidTeamOfWeekPlayers(List<Player> players) {
+        private List<Player> GetValidTeamOfWeekPlayers(List<Player> players) {
             var playersOfTheWeek = new List<Player>();
 
             foreach (var player in players) {
                 // get number of players of this players position we have already added
                 var playersInSamePosition = playersOfTheWeek.Count(x => x.Position == player.Position);
 
-                // if there's still room for more then add this player too
-                if (playersInSamePosition < PositionalBounds[player.Position]) {
-                    playersOfTheWeek.Add(player);
+                // if there's still room for more in this position...
+                if (playersInSamePosition < PositionalBoundsUpper[player.Position]) {
+
+                    // and we have enough places left over to still reach valid lower bounds...
+                    if (CheckLowerBoundPotential(playersOfTheWeek, player)) {
+
+                        // then add the player
+                        playersOfTheWeek.Add(player);
+                    }
+                    
                 }
 
                 // we have enough players so bail
@@ -103,7 +116,28 @@ namespace TheLeague.Controllers {
                 }
             }
 
+            // check that we have at least the min players in each position
+            if (playersOfTheWeek.Count(x => x.Position == 2) < 3) {
+
+            }
+
             return playersOfTheWeek;
+        }
+
+        private bool CheckLowerBoundPotential(List<Player> playersAlreadyAddedRef, Player playerToBeAdded) {
+            var playersAlreadyAdded = playersAlreadyAddedRef.ToList();
+            playersAlreadyAdded.Add(playerToBeAdded);
+
+            foreach (var position in PositionalBoundsLower) {
+                var numberOfPlayersAddedInPosition = playersAlreadyAdded.Count(x => x.Position == position.Key);
+                var differenceBetweenNeededAndAlreadyAdded = position.Value - numberOfPlayersAddedInPosition;
+
+                if (differenceBetweenNeededAndAlreadyAdded > (10 - playersAlreadyAdded.Count)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
