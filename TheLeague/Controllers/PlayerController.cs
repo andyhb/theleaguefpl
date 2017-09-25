@@ -116,11 +116,6 @@ namespace TheLeague.Controllers {
                 }
             }
 
-            // check that we have at least the min players in each position
-            if (playersOfTheWeek.Count(x => x.Position == 2) < 3) {
-
-            }
-
             return playersOfTheWeek;
         }
 
