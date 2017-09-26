@@ -53,7 +53,7 @@
         <button *ngIf="!teamSelection" class="btn btn-primary" (click)="populateFromLineup()">Apply current lineup</button>
         <button *ngIf="!teamSelection" class="btn btn-primary" (click)="populateFromNextGameWeekLineup()">Apply next lineup</button>
         <button *ngIf="!teamSelection && auth.isAdmin() && selectedPlayers.length > 0" [disabled]="!isValidFormation()" class="btn btn-primary" (click)="addResult()">Update GW {{ currentGameWeek }} Result</button>
-        <button *ngIf="teamSelection && (auth.isAdmin() || teamId == auth.teamId()) && selectedPlayers.length > 0" [disabled]="selectedPlayers.length !== 11 && !isValidFormation()" class="btn btn-primary" (click)="addLineup()">
+        <button *ngIf="teamSelection && (auth.isAdmin() || teamId == auth.teamId()) && selectedPlayers.length > 0" [disabled]="selectedPlayers.length !== 11 || !isValidFormation()" class="btn btn-primary" (click)="addLineup()">
             <span *ngIf="!teamLineup">Set</span><span *ngIf="teamLineup">Update</span> GW {{ currentGameWeek + 1 }} Lineup
         </button>
         
